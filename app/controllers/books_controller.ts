@@ -3,14 +3,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 import vine from '@vinejs/vine'
 import Genre from '#models/genre'
 import db from '@adonisjs/lucid/services/db'
-
-const schema = vine.object({
-  title: vine.string().trim().minLength(1),
-  author: vine.string().trim().minLength(1),
-  publishedYear: vine.number().positive().max(new Date().getFullYear()),
-  genres: vine.array(vine.string().trim().minLength(1)).minLength(1),
-  stock: vine.number(),
-})
+import { createBookValidator, updateBookValidator } from '#validators/book'
 
 export default class BooksController {
   async index({ request, response }: HttpContext) {
@@ -41,12 +34,12 @@ export default class BooksController {
 
   async store({ request, response }: HttpContext) {
     const data = request.all()
-    await vine.validate({ schema, data })
+    const payload = await createBookValidator.validate(data)
     /*untuk keamanan simpan data menggunakan transaksi*/
     const trx = await db.transaction()
 
     try {
-      const { genres, ...bookData } = data
+      const { genres, ...bookData } = payload
       const book = await Book.create(bookData, { client: trx })
       const genreData = data.genres.map((name: string) => ({
         name,
@@ -84,8 +77,8 @@ export default class BooksController {
     try {
       const booksFind = await Book.findOrFail(params.id)
       const data = request.all()
-      await vine.validate({ schema, data })
-      const { genres, ...bookData } = data
+      const payload = await updateBookValidator.validate(data)
+      const { genres, ...bookData } = payload
       const trx = await db.transaction()
 
       try {
