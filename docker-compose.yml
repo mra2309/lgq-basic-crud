@@ -1,0 +1,52 @@
+version: '3.8'
+services:
+  app:
+    build: .
+    container_name: adonis-app
+    ports:
+      - '5000:5000'
+    volumes:
+      - .:/app
+    environment:
+      TZ: UTC
+      HOST: 0.0.0.0
+      PORT: 5000
+      LOG_LEVEL: info
+      APP_KEY: swNeB0aaSsa75Hs-GK9M5BAcNGP7x--w
+      NODE_ENV: development
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: password
+      DB_DATABASE: app_logique_test
+      LIMITER_STORE: database
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD:
+    depends_on:
+      - mysql
+      - redis
+    restart: unless-stopped
+
+  mysql:
+    image: mysql:8
+    container_name: mysql
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: app_logique_test
+    volumes:
+      - mysql-data:/var/lib/mysql
+    restart: unless-stopped
+
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - '6379:6379'
+    restart: unless-stopped
+
+volumes:
+  mysql-data:

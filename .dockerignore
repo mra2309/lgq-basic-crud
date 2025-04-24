@@ -1,0 +1,28 @@
+# Node.js dependencies and build files
+node_modules
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+package-lock.json
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# IDE/Editor specific files
+.vscode/
+.idea/
+
+# AdonisJS build files
+build/
+
+# Environment-specific files
+.env
+.env.example
+
+# Docker-specific files
+.dockerignore
+Dockerfile
+
+# Logs
+*.log

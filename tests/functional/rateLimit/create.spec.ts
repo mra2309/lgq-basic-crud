@@ -7,7 +7,7 @@ test.group('Rate Limiting', () => {
       res.assertStatus(200)
     }
 
-    /*request ke 6 akan ke block karena kita sudah jalankan crud 5 hit 
+    /*request ke 6 akan ke block karena kita sudah jalankan crud test 5 hit 
     dan di tambah rate limit 5 hit */
     const res = await client.get('/api/books')
     res.assertStatus(429)
