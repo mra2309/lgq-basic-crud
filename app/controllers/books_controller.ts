@@ -1,6 +1,5 @@
 import Book from '#models/book'
 import type { HttpContext } from '@adonisjs/core/http'
-import vine from '@vinejs/vine'
 import Genre from '#models/genre'
 import db from '@adonisjs/lucid/services/db'
 import { createBookValidator, updateBookValidator } from '#validators/book'

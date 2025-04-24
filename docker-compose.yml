@@ -1,52 +1,54 @@
 version: '3.8'
+
 services:
   app:
-    build: .
-    container_name: adonis-app
-    ports:
-      - '5000:5000'
-    volumes:
-      - .:/app
+    image: adonis-app
+    build:
+      context: .
+      dockerfile: Dockerfile
     environment:
-      TZ: UTC
-      HOST: 0.0.0.0
-      PORT: 5000
-      LOG_LEVEL: info
-      APP_KEY: swNeB0aaSsa75Hs-GK9M5BAcNGP7x--w
-      NODE_ENV: development
-      DB_CONNECTION: mysql
-      DB_HOST: mysql
-      DB_PORT: 3306
-      DB_USER: root
-      DB_PASSWORD: password
-      DB_DATABASE: app_logique_test
-      LIMITER_STORE: database
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      REDIS_PASSWORD:
+      - TZ=UTC
+      - HOST=0.0.0.0
+      - PORT=5000
+      - LOG_LEVEL=info
+      - APP_KEY=swNeB0aaSsa75Hs-GK9M5BAcNGP7x--w
+      - NODE_ENV=production
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_DATABASE=app_logique_test
+      - LIMITER_STORE=database
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=
+    ports:
+      - "5000:5000"
     depends_on:
       - mysql
       - redis
-    restart: unless-stopped
+    networks:
+      - app-network
 
   mysql:
     image: mysql:8
-    container_name: mysql
-    ports:
-      - '3306:3306'
     environment:
-      MYSQL_ROOT_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: app_logique_test
-    volumes:
-      - mysql-data:/var/lib/mysql
-    restart: unless-stopped
+    mem_limit: 2g # Set memory limit to 2GB
+    networks:
+      - app-network
 
   redis:
-    image: redis:7
-    container_name: redis
-    ports:
-      - '6379:6379'
-    restart: unless-stopped
+    image: redis:alpine
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
 
 volumes:
   mysql-data:
+    driver: local
