@@ -36,6 +36,12 @@ install dependency
 ```bash
   node ace migration:run 
 ```
+ 
+ jalankan test
+ 
+```bash
+  npm ace test
+```
 
  jalankan program
 
